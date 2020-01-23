@@ -26,5 +26,5 @@ rule BadRabbit_Gen {
       $s5 = "%ws C:\\Windows\\%ws,#1 %ws" fullword wide
       
    condition:
-      uint16(0) == 0x5a4d and filesize < 700KB and ( 1 of ($x*) or 2 of them )
+      uint16(0) == 0x5a4d and filesize < 600KB and ( 1 of ($x*) or 2 of them )
 }
