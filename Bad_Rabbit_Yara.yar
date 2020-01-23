@@ -24,7 +24,8 @@ rule BadRabbit_Gen {
       $s3 = "SYSTEM\\CurrentControlSet\\services\\%ws" fullword wide
       $s4 = "process call create \"C:\\Windows\\System32\\rundll32.exe" fullword wide
       $s5 = "%ws C:\\Windows\\%ws,#1 %ws" fullword wide
+      $s6 = "schtasks /Delete /F /TN %ws" fullword wide
       
    condition:
-      uint16(0) == 0x5a4d and filesize < 600KB and ( 1 of ($x*) or 2 of them )
+      uint16(0) == 0x5a4d and filesize < 600KB and ( 2 of ($x*) or 4 of them ) or ( all of them )
 }
