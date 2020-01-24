@@ -1,12 +1,10 @@
-rule BadRabbit {
+rule BadRabbit_dropper {
    meta:
-      description = "Règles pour BadRabbit"
+   
+      description = "Règles pour le dropper BadRabbit"
       author = "@ntaff"
       date = "2020-01-23"
-      
-      /* dispci.exe */
-      hash1 = "8ebc97e05c8e1073bda2efb6f4d00ad7e789260afa2c276f0c72740b838a0a93"
-      
+
       /* infpub.dat */
       hash2 = "579fd8a0385482fb4c789561a30b09f25671e86422f40ef5cca2036b28f99648"
       
@@ -33,22 +31,26 @@ rule BadRabbit {
       uint16(0) == 0x5a4d and filesize < 600KB and ( 2 of ($x*) or 4 of them ) or ( all of them )
 }
 
-      rule BadRabbit_DiskCryptor {
-      meta:
+rule BadRabbit_DiskCryptor {
 
+      meta:
+      
       description = "Règles pour le fichier dispci.exe"
-      author = "Nicolas Taffoureau"
+      author = "@ntaff"
       last_updated = "2020-01-24"
+            
+      /* dispci.exe */
+      hash1 = "8ebc97e05c8e1073bda2efb6f4d00ad7e789260afa2c276f0c72740b838a0a93"
       
       strings:
       
       /* PhysicalDrive */
-      $a = ".\\PhysicalDrive%d" wide
+      $s1 = ".\\PhysicalDrive%d" fullword wide
       
       /* Les tâches planifiées */
-      $b = "viserion" wide
-      $c = "drogon" wide
-      $d = "rhaegal" wide
+      $s2 = "viserion" fullword wide
+      $s3 = "drogon" fullword wide
+      $S4 = "rhaegal" fullword wide
       
       condition:
       all of them and
