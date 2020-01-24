@@ -1,4 +1,4 @@
-rule BadRabbit_Gen {
+rule BadRabbit {
    meta:
       description = "Règles pour BadRabbit"
       author = "@ntaff"
@@ -14,6 +14,7 @@ rule BadRabbit_Gen {
       hash3 = "630325cac09ac3fab908f903e3b00d0dadd5fdaa0875ed8496fcbb97a558d0da"
       
    strings:
+
       $x1 = "schtasks /Create /SC ONCE /TN viserion_%u /RU SYSTEM /TR \"%ws\" /ST" fullword wide
       $x2 = "schtasks /Create /RU SYSTEM /SC ONSTART /TN rhaegal /TR \"%ws /C Start \\\"\\\" \\\"%wsdispci.exe\\\"" fullword wide
       $x3 = "C:\\Windows\\infpub.dat" fullword wide
@@ -25,7 +26,32 @@ rule BadRabbit_Gen {
       $s4 = "process call create \"C:\\Windows\\System32\\rundll32.exe" fullword wide
       $s5 = "%ws C:\\Windows\\%ws,#1 %ws" fullword wide
       $s6 = "schtasks /Delete /F /TN %ws" fullword wide
+      $s7 = "%ws\\admin$\\%ws" fullword wide
+      $s8 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5clDuVFr5sQxZ+feQlVvZcEK0k4" wide
       
    condition:
       uint16(0) == 0x5a4d and filesize < 600KB and ( 2 of ($x*) or 4 of them ) or ( all of them )
+}
+
+      rule BadRabbit_DiskCryptor {
+      meta:
+
+      description = "Règles pour le fichier dispci.exe"
+      author = "Nicolas Taffoureau"
+      last_updated = "2020-01-24"
+      
+      strings:
+      
+      /* PhysicalDrive */
+      $a = ".\\PhysicalDrive%d" wide
+      
+      /* Les tâches planifiées */
+      $b = "viserion" wide
+      $c = "drogon" wide
+      $d = "rhaegal" wide
+      
+      condition:
+      all of them and
+      pe.version_info["ProductName"] contains "GrayWorm" and
+      pe.version_info["LegalCopyright"] contains "http://diskcryptor.net"
 }
